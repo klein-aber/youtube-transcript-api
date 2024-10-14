@@ -140,6 +140,7 @@ class YouTubeTranscriptApi(object):
         languages=("en",),
         proxies=None,
         cookies=None,
+        headers=None,
         preserve_formatting=False,
     ):
         """
@@ -157,6 +158,8 @@ class YouTubeTranscriptApi(object):
         :type proxies: {'http': str, 'https': str} - http://docs.python-requests.org/en/master/user/advanced/#proxies
         :param cookies: a string of the path to a text file containing youtube authorization cookies
         :type cookies: str
+        :param headers: a dictionary of additional headers to include in the requests
+        :type headers: dict
         :param preserve_formatting: whether to keep select HTML text formatting
         :type preserve_formatting: bool
         :return: a list of dictionaries containing the 'text', 'start' and 'duration' keys
@@ -164,7 +167,7 @@ class YouTubeTranscriptApi(object):
         """
         assert isinstance(video_id, str), "`video_id` must be a string"
         return (
-            cls.list_transcripts(video_id, proxies, cookies)
+            cls.list_transcripts(video_id, proxies, cookies, headers=headers)
             .find_transcript(languages)
             .fetch(preserve_formatting=preserve_formatting)
         )
