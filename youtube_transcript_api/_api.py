@@ -70,7 +70,6 @@ class YouTubeTranscriptApi(object):
         :return: the list of available transcripts
         :rtype TranscriptList:
         """
-        print("Forked API")
         with requests.Session() as http_client:
             if cookies:
                 http_client.cookies = cls._load_cookies(cookies, video_id)
