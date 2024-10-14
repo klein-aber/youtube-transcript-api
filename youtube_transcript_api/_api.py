@@ -16,7 +16,9 @@ from ._errors import CookiePathInvalid, CookiesInvalid
 
 class YouTubeTranscriptApi(object):
     @classmethod
-    def list_transcripts(cls, video_id, proxies=None, cookies=None, verify=True):
+    def list_transcripts(
+        cls, video_id, proxies=None, cookies=None, verify=True, headers=None
+    ):
         """
         Retrieves the list of transcripts which are available for a given video. It returns a `TranscriptList` object
         which is iterable and provides methods to filter the list of transcripts for specific languages. While iterating
@@ -63,6 +65,8 @@ class YouTubeTranscriptApi(object):
         :type cookies: str
         :param verify: SSL Verification default. Will make your application vulnerable to man-in-the-middle (MitM) attacks.
         :type verify: bool
+        :param headers: a dictionary of additional headers to include in the requests
+        :type headers: dict
         :return: the list of available transcripts
         :rtype TranscriptList:
         """
@@ -71,6 +75,9 @@ class YouTubeTranscriptApi(object):
                 http_client.cookies = cls._load_cookies(cookies, video_id)
             http_client.proxies = proxies if proxies else {}
             http_client.verify = verify
+            if headers:
+                http_client.headers.update(headers)
+
             return TranscriptListFetcher(http_client).fetch(video_id)
 
     @classmethod
