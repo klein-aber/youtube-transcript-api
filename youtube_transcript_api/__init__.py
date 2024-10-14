@@ -14,4 +14,5 @@ from ._errors import (
     FailedToCreateConsentCookie,
     YouTubeRequestFailed,
     InvalidVideoId,
+    BotRestricted,
 )
