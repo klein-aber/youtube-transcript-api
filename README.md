@@ -1,4 +1,3 @@
-
 <h1 align="center">
   ✨ YouTube Transcript API ✨
 </h1>
@@ -86,6 +85,7 @@ This will return a list of dictionaries looking somewhat like this:
     # ...
 ]
 ```
+
 ### Retrieve different languages
 
 You can add the `languages` param if you want to make sure the transcripts are retrieved in your desired language (it defaults to english).
@@ -101,6 +101,7 @@ If you only want one language, you still need to format the `languages` argument
 ```python
 YouTubeTranscriptApi.get_transcript(video_id, languages=['de'])
 ```
+
 ### Batch fetching of transcripts
 
 To get transcripts for a list of video ids you can call:
@@ -127,7 +128,7 @@ If you want to list all transcripts which are available for a given video you ca
 transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
 ```
 
-This will return a `TranscriptList` object  which is iterable and provides methods to filter the list of transcripts for specific languages and types, like:
+This will return a `TranscriptList` object which is iterable and provides methods to filter the list of transcripts for specific languages and types, like:
 
 ```python
 transcript = transcript_list.find_transcript(['de', 'en'])
@@ -176,6 +177,7 @@ print(translated_transcript.fetch())
 ```
 
 ### By example
+
 ```python
 from youtube_transcript_api import YouTubeTranscriptApi
 
@@ -205,16 +207,17 @@ for transcript in transcript_list:
     print(transcript.translate('en').fetch())
 
 # you can also directly filter for the language you are looking for, using the transcript list
-transcript = transcript_list.find_transcript(['de', 'en'])  
+transcript = transcript_list.find_transcript(['de', 'en'])
 
-# or just filter for manually created transcripts  
-transcript = transcript_list.find_manually_created_transcript(['de', 'en'])  
+# or just filter for manually created transcripts
+transcript = transcript_list.find_manually_created_transcript(['de', 'en'])
 
-# or automatically generated ones  
+# or automatically generated ones
 transcript = transcript_list.find_generated_transcript(['de', 'en'])
 ```
 
 ### Using Formatters
+
 Formatters are meant to be an additional layer of processing of the transcript you pass it. The goal is to convert the transcript from its Python data type into a consistent string of a given "format". Such as a basic text (`.txt`) or even formats that have a defined specification such as JSON (`.json`), WebVTT (`.vtt`), SRT (`.srt`), Comma-separated format (`.csv`), etc...
 
 The `formatters` submodule provides a few basic formatters to wrap around you transcript data in cases where you might want to do something such as output a specific format then write that format to a file. Maybe to backup/store and run another script against at a later time.
@@ -241,6 +244,7 @@ from youtube_transcript_api.formatters import SRTFormatter
 ```
 
 ### Provided Formatter Example
+
 Lets say we wanted to retrieve a transcript and write that transcript as a JSON file in the same format as the API returned it as. That would look something like this:
 
 ```python
@@ -274,6 +278,7 @@ json_formatted = JSONFormatter().format_transcript(transcript, indent=2)
 ```
 
 ### Custom Formatter Example
+
 You can implement your own formatter class. Just inherit from the `Formatter` base class and ensure you implement the `format_transcript(self, transcript, **kwargs)` and `format_transcripts(self, transcripts, **kwargs)` methods which should ultimately return a string when called on your formatter instance.
 
 ```python
@@ -290,40 +295,40 @@ class MyCustomFormatter(Formatter):
 
 ## CLI
 
-Execute the CLI script using the video ids as parameters and the results will be printed out to the command line:  
+Execute the CLI script using the video ids as parameters and the results will be printed out to the command line:
 
-```  
-youtube_transcript_api <first_video_id> <second_video_id> ...  
-```  
+```
+youtube_transcript_api <first_video_id> <second_video_id> ...
+```
 
-The CLI also gives you the option to provide a list of preferred languages:  
+The CLI also gives you the option to provide a list of preferred languages:
 
-```  
-youtube_transcript_api <first_video_id> <second_video_id> ... --languages de en  
+```
+youtube_transcript_api <first_video_id> <second_video_id> ... --languages de en
 ```
 
 You can also specify if you want to exclude automatically generated or manually created subtitles:
 
-```  
+```
 youtube_transcript_api <first_video_id> <second_video_id> ... --languages de en --exclude-generated
 youtube_transcript_api <first_video_id> <second_video_id> ... --languages de en --exclude-manually-created
 ```
 
-If you would prefer to write it into a file or pipe it into another application, you can also output the results as json using the following line:  
+If you would prefer to write it into a file or pipe it into another application, you can also output the results as json using the following line:
 
-```  
+```
 youtube_transcript_api <first_video_id> <second_video_id> ... --languages de en --format json > transcripts.json
-```  
+```
 
 Translating transcripts using the CLI is also possible:
 
-```  
+```
 youtube_transcript_api <first_video_id> <second_video_id> ... --languages en --translate de
-```  
+```
 
 If you are not sure which languages are available for a given video you can call, to list all available transcripts:
 
-```  
+```
 youtube_transcript_api --list-transcripts <first_video_id>
 ```
 
@@ -333,32 +338,32 @@ If a video's ID starts with a hyphen you'll have to mask the hyphen using `\` to
 youtube_transcript_api "\-abc123"
 ```
 
-## Proxy  
+## Proxy
 
 You can specify a https proxy, which will be used during the requests to YouTube:
 
-```python  
-from youtube_transcript_api import YouTubeTranscriptApi  
+```python
+from youtube_transcript_api import YouTubeTranscriptApi
 
 YouTubeTranscriptApi.get_transcript(video_id, proxies={"https": "https://user:pass@domain:port"})
-```  
+```
 
-As the `proxies` dict is passed on to the `requests.get(...)` call, it follows the [format used by the requests library](https://requests.readthedocs.io/en/latest/user/advanced/#proxies).  
+As the `proxies` dict is passed on to the `requests.get(...)` call, it follows the [format used by the requests library](https://requests.readthedocs.io/en/latest/user/advanced/#proxies).
 
-Using the CLI:  
+Using the CLI:
 
-```  
+```
 youtube_transcript_api <first_video_id> <second_video_id> --https-proxy https://user:pass@domain:port
 ```
 
 ## Cookies
 
-Some videos are age restricted, so this module won't be able to access those videos without some sort of authentication. To do this, you will need to have access to the desired video in a browser. Then, you will need to download that pages cookies into a text file. You can use the Chrome extension [Cookie-Editor](https://chromewebstore.google.com/detail/cookie-editor/hlkenndednhfkekhgcdicdfddnkalmdm?hl=en) and select "Netscape" during export, or the Firefox extension [cookies.txt](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/).
+Some videos are age restricted, so this module won't be able to access those videos without some sort of authentication. To do this, you will need to have access to the desired video in a browser. Then, you will need to download that pages cookies into a text file. You can use the Chrome extension [cookies.txt](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en) or the Firefox extension [cookies.txt](https://addons.mozilla.org/en-US/firefox/addon/cookies-txt/).
 
 Once you have that, you can use it with the module to access age-restricted videos' captions like so.
 
-```python  
-from youtube_transcript_api import YouTubeTranscriptApi  
+```python
+from youtube_transcript_api import YouTubeTranscriptApi
 
 YouTubeTranscriptApi.get_transcript(video_id, cookies='/path/to/your/cookies.txt')
 
@@ -371,13 +376,21 @@ Using the CLI:
 youtube_transcript_api <first_video_id> <second_video_id> --cookies /path/to/your/cookies.txt
 ```
 
+## Headers
 
-## Warning  
+You can pass additional headers to the `list_transcripts` method by providing a dictionary of headers as the `headers` parameter. This can be useful for various purposes, such as specifying the accepted encoding, setting a custom user agent, or including any other necessary headers for the request.
 
- This code uses an undocumented part of the YouTube API, which is called by the YouTube web-client. So there is no guarantee that it won't stop working tomorrow, if they change how things work. I will however do my best to make things working again as soon as possible if that happens. So if it stops working, let me know!  
+```python
+headers = {'Accept-Encoding': 'gzip, deflate'}
+transcript_list = YouTubeTranscriptApi.list_transcripts(video_id, headers=headers)
+```
+
+## Warning
+
+This code uses an undocumented part of the YouTube API, which is called by the YouTube web-client. So there is no guarantee that it won't stop working tomorrow, if they change how things work. I will however do my best to make things working again as soon as possible if that happens. So if it stops working, let me know!
 
 ## Donations
 
-If this project makes you happy by reducing your development time, you can make me happy by treating me to a cup of coffee, or become a [Sponsor of this project](https://github.com/sponsors/jdepoix) :)  
+If this project makes you happy by reducing your development time, you can make me happy by treating me to a cup of coffee, or become a [Sponsor of this project](https://github.com/sponsors/jdepoix) :)
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BAENLEW8VUJ6G&source=url)

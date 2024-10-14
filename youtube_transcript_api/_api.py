@@ -75,6 +75,7 @@ class YouTubeTranscriptApi(object):
                 http_client.cookies = cls._load_cookies(cookies, video_id)
             http_client.proxies = proxies if proxies else {}
             http_client.verify = verify
+            # Default accept language, can be overwritten by passing custom headers
             http_client.headers.update({"Accept-Language": "en-US"})
             if headers:
                 http_client.headers.update(headers)
